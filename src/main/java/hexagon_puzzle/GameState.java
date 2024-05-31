@@ -24,30 +24,19 @@ public class GameState implements State {
     //TODO
     //generate possible moves //BAD
     static {
-        //NOPE NOPE NOPE
-        //only internal nodes can be the axis
         //refactor pls
-        //first line of nodes
-        for (int i = 1; i <=3; i++) {
-                legalMoves.add(new Move(new Position(1,i), 1));
-                legalMoves.add(new Move(new Position(1,i), -1));
-        }
-        //second line of nodes ...
-        for (int i = 1; i <=4; i++) {
+
+        for (int i = 2; i <=3; i++) {
             legalMoves.add(new Move(new Position(2,i), 1));
             legalMoves.add(new Move(new Position(2,i), -1));
         }
-        for (int i = 1; i <=5; i++) {
+        for (int i = 2; i <=4; i++) {
             legalMoves.add(new Move(new Position(3,i), 1));
             legalMoves.add(new Move(new Position(3,i), -1));
         }
-        for (int i = 1; i <=4; i++) {
+        for (int i = 2; i <=3; i++) {
             legalMoves.add(new Move(new Position(4,i), 1));
             legalMoves.add(new Move(new Position(4,i), -1));
-        }
-        for (int i = 1; i <=3; i++) {
-            legalMoves.add(new Move(new Position(5,i), 1));
-            legalMoves.add(new Move(new Position(5,i), -1));
         }
     }
 

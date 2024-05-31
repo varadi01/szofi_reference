@@ -5,7 +5,7 @@ public class Move {
     public int direction; //1-right(clockwise) ;  -1 left (counter-clockwise)
 
     public Move(Position selectedNode, int direction) {
-        this.selectedNode = selectedNode;
+        this.center = selectedNode;
         this.direction = direction;
     }
 
