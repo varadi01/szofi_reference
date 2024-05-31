@@ -67,14 +67,11 @@ public class GameState implements State {
         return legalMoves.contains(o); //hashset?
     }
 
-    public List<NodeColours> getNeighbours(Position position) {
-        //TODO
-        //we store neighbours in clockwise order !?
-        List<NodeColours> neighbours = new ArrayList<>(); //dunno
+    public List<int[]> getNeighboursCoordinates(Position position){
 
-        //USING A SEPERATE COORDINATE OBJECT MIGHT BE BETTER
         int[] centerNodeCoordinates = Position.convertPositionToCoordinates(position);
         //generate neighbours' coordinates
+
         List<int[]> neighbouringNodesCoordinates = new ArrayList<>(); //dunno
         //smth like this
         neighbouringNodesCoordinates.add(new int[] {centerNodeCoordinates[0]-1,centerNodeCoordinates[1]+1}); //top right neighbour
@@ -84,6 +81,19 @@ public class GameState implements State {
         neighbouringNodesCoordinates.add(new int[] {centerNodeCoordinates[0],centerNodeCoordinates[1]-2}); //left neighbour
         neighbouringNodesCoordinates.add(new int[] {centerNodeCoordinates[0]-1,centerNodeCoordinates[1]-1}); //top left neighbour
 
+        return neighbouringNodesCoordinates;
+    }
+
+    public List<NodeColours> getNeighbours(Position position) {
+        //TODO
+        //we store neighbours in clockwise order !?
+        List<NodeColours> neighbours = new ArrayList<>(); //dunno
+
+        //USING A SEPERATE COORDINATE OBJECT MIGHT BE BETTER
+
+        List<int[]> neighbouringNodesCoordinates = getNeighboursCoordinates(position);
+
+        //getterek pls
         for (int[] neighbourCoordinate : neighbouringNodesCoordinates) {
             neighbours.add(currentState[neighbourCoordinate[0]][neighbourCoordinate[1]]);
         }
@@ -92,14 +102,29 @@ public class GameState implements State {
     }
 
     public void setNeighbours(Position position, List<NodeColours> neighbours) {
-        //TODO
+        List<int[]> neighbouringNodesCoordinates = getNeighboursCoordinates(position);
+        for (int i = 0; i < neighbours.size(); i++) {
+            int x = neighbouringNodesCoordinates.get(i)[0];
+            int y = neighbouringNodesCoordinates.get(i)[1];
+            currentState[x][y] = neighbours.get(i);
+        }
+    }
+
+    public List<NodeColours> permutateNodes(List<NodeColours> nodes, int direction) {
+        List<NodeColours> permutation = new ArrayList<>();
+
+        for (int i = 0; i < nodes.size(); i++) {
+            permutation.set(i, nodes.get(i-direction));
+        }
+
+        return permutation;
     }
 
     @Override
     public void makeMove(Object o) {
         //TODO
         //o is move
-        if (!(o instanceof Move)) { return ; }//should throw smth
+        if (!(o instanceof Move)) { return ; }//should throw smth //redundant
         if (!isLegalMove(o)) { return; }
         //IS LEGAL MOVE
 
@@ -107,10 +132,15 @@ public class GameState implements State {
         Move move = (Move) o;
 
         //get neighbours
+        List<NodeColours> neighbours = getNeighbours(move.getCenter());
         //permutate list of neighbours
-        //change neighbours
+        List<NodeColours> rotatedNeighbours = permutateNodes(neighbours, move.getDirection());
 
-        //somehow
+        //change neighbours
+        setNeighbours(move.getCenter(), rotatedNeighbours);
+
+
+
         //that's it, check for exceptions
     }
 
