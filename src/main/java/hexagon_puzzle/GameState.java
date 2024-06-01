@@ -1,28 +1,80 @@
 package hexagon_puzzle;
 
 import puzzle.State;
+import puzzle.solver.BreadthFirstSearch;
 
 import java.util.*;
 
 
-public class GameState implements State {
+public class GameState implements State<Move> {
 
     public enum NodeColours {
         BLUE,
         RED,
-        GREEN
+        GREEN,
+        EMPTY
     }
 
     public NodeColours[][] currentState;
 
     //sorfolytonosan?
-    public static final NodeColours[][] startState = new NodeColours[][]{};
-    public static final NodeColours[][] goalState = new NodeColours[][]{};
+    public static final NodeColours[][] startState = new NodeColours[5][9];
+    public static final NodeColours[][] goalState = new NodeColours[5][9];
+    static {
+        //initialize arrays
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 9; j++) {
+                startState[i][j] = NodeColours.EMPTY;
+                goalState[i][j] = NodeColours.EMPTY;
+            }
+        }
 
+        //set start state // do smarter pls
+        startState[0][2] = NodeColours.RED;
+        startState[0][4] = NodeColours.RED;
+        startState[0][6] = NodeColours.RED;
+        startState[1][1] = NodeColours.RED;
+        startState[1][3] = NodeColours.RED;
+        startState[1][5] = NodeColours.RED;
+        startState[1][7] = NodeColours.BLUE;
+        startState[2][0] = NodeColours.BLUE;
+        startState[2][2] = NodeColours.BLUE;
+        startState[2][4] = NodeColours.BLUE;
+        startState[2][6] = NodeColours.BLUE;
+        startState[2][8] = NodeColours.BLUE;
+        startState[3][1] = NodeColours.BLUE;
+        startState[3][3] = NodeColours.GREEN;
+        startState[3][5] = NodeColours.GREEN;
+        startState[3][7] = NodeColours.GREEN;
+        startState[4][2] = NodeColours.GREEN;
+        startState[4][4] = NodeColours.GREEN;
+        startState[4][6] = NodeColours.GREEN;
+
+        //set goal state
+        goalState[0][2] = NodeColours.GREEN;
+        goalState[0][4] = NodeColours.RED;
+        goalState[0][6] = NodeColours.GREEN;
+        goalState[1][1] = NodeColours.RED;
+        goalState[1][3] = NodeColours.BLUE;
+        goalState[1][5] = NodeColours.BLUE;
+        goalState[1][7] = NodeColours.RED;
+        goalState[2][0] = NodeColours.GREEN;
+        goalState[2][2] = NodeColours.BLUE;
+        goalState[2][4] = NodeColours.BLUE;
+        goalState[2][6] = NodeColours.BLUE;
+        goalState[2][8] = NodeColours.GREEN;
+        goalState[3][1] = NodeColours.RED;
+        goalState[3][3] = NodeColours.BLUE;
+        goalState[3][5] = NodeColours.BLUE;
+        goalState[3][7] = NodeColours.RED;
+        goalState[4][2] = NodeColours.GREEN;
+        goalState[4][4] = NodeColours.RED;
+        goalState[4][6] = NodeColours.GREEN;
+    }
 
     private static final Set<Move> legalMoves = new HashSet<>();
-    //TODO
-    //generate possible moves //BAD
+
+    //generate possible moves
     static {
         //refactor pls
 
@@ -51,7 +103,7 @@ public class GameState implements State {
     }
 
     @Override
-    public boolean isLegalMove(Object o) {
+    public boolean isLegalMove(Move o) {
         if (!(o instanceof Move)) { return false; }//should throw smth
         return legalMoves.contains(o); //hashset?
     }
@@ -110,7 +162,7 @@ public class GameState implements State {
     }
 
     @Override
-    public void makeMove(Object o) {
+    public void makeMove(Move o) {
         //TODO
         //o is move
         if (!(o instanceof Move)) { return ; }//should throw smth //redundant
@@ -162,5 +214,12 @@ public class GameState implements State {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(currentState);
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println("solution");
+        new BreadthFirstSearch<Move>().solveAndPrintSolution(new GameState());
+        
     }
 }
