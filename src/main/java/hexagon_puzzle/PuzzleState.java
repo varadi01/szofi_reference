@@ -72,11 +72,11 @@ public class PuzzleState implements State<Move> {
         goalState[4][6] = Node.GREEN;
     }
 
-    public static final Set<Move> legalMoves = new HashSet<>();
-    //generate possible moves
+    private static final Set<Move> legalMoves = new HashSet<>();
+
     static {
         //refactor pls
-
+        //megeszi a legal moveokat
         for (int i = 2; i <=3; i++) {
             legalMoves.add(new Move(new Position(2,i), 1));
             legalMoves.add(new Move(new Position(2,i), -1));
@@ -93,6 +93,7 @@ public class PuzzleState implements State<Move> {
 
     public PuzzleState() {
         setCurrentState(startState);
+
     }
 
     public Node[][] getCurrentState() {
@@ -105,7 +106,7 @@ public class PuzzleState implements State<Move> {
 
     @Override
     public boolean isSolved() {
-        return Arrays.deepEquals(getCurrentState(), goalState); //hmmm
+        return Arrays.deepEquals(getCurrentState(), goalState); //hmm
     }
 
     @Override
@@ -117,7 +118,7 @@ public class PuzzleState implements State<Move> {
     public static List<int[]> getNeighboursCoordinates(Position position){
         int[] centerNodeCoordinates = Position.convertPositionToCoordinates(position);
 
-        List<int[]> neighbouringNodesCoordinates = new ArrayList<>(); //dunno
+        List<int[]> neighbouringNodesCoordinates = new ArrayList<>(); //dunno //may be linked list eg
 
         neighbouringNodesCoordinates.add(new int[] {centerNodeCoordinates[0]-1,centerNodeCoordinates[1]+1}); //top right neighbour
         neighbouringNodesCoordinates.add(new int[] {centerNodeCoordinates[0],centerNodeCoordinates[1]+2}); //right neighbour
@@ -193,7 +194,7 @@ public class PuzzleState implements State<Move> {
     @Override
     public void makeMove(Move move) {
         if (move == null) { return ; }//should throw smth
-        if (!isLegalMove(move)) { return; }
+        //if (!isLegalMove(move)) { return; }
 
         //get neighbours
         List<Node> neighbours = getNeighbours(move.getCenter());
@@ -207,7 +208,11 @@ public class PuzzleState implements State<Move> {
 
     @Override
     public Set<Move> getLegalMoves() {
-        return legalMoves;
+        Set<Move> moves = new HashSet<>();
+        for (Move move : legalMoves){
+            moves.add(move);
+        }
+        return moves;
     }
 
     @Override
@@ -240,5 +245,20 @@ public class PuzzleState implements State<Move> {
         System.out.println("solution");
         new BreadthFirstSearch<Move>().solveAndPrintSolution(new PuzzleState());
 
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (this.getCurrentState()[i][j]!=Node.EMPTY){
+                    sb.append(this.getCurrentState()[i][j]).append(" ");
+                }
+            }
+            sb.append("\n");
+        }
+        sb.append("-----------------------------------");
+        return sb.toString();
     }
 }
