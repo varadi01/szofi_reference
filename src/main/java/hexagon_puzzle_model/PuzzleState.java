@@ -1,4 +1,4 @@
-package hexagon_puzzle;
+package hexagon_puzzle_model;
 
 import puzzle.State;
 import puzzle.solver.BreadthFirstSearch;
@@ -76,7 +76,7 @@ public class PuzzleState implements State<Move> {
 
     static {
         //refactor pls
-        //megeszi a legal moveokat
+
         for (int i = 2; i <=3; i++) {
             legalMoves.add(new Move(new Position(2,i), 1));
             legalMoves.add(new Move(new Position(2,i), -1));
@@ -106,7 +106,24 @@ public class PuzzleState implements State<Move> {
 
     @Override
     public boolean isSolved() {
-        return Arrays.deepEquals(getCurrentState(), goalState); //hmm
+        //return Arrays.deepEquals(getCurrentState(), goalState); //hmm
+
+        ArrayList<Position> poses = new ArrayList<>();
+        poses.add(new Position(2,2));
+        poses.add(new Position(2,3));
+        poses.add(new Position(3,2));
+        poses.add(new Position(3,3));
+        poses.add(new Position(3,4));
+        poses.add(new Position(4,2));
+        poses.add(new Position(4,3));
+
+        for (Position pos : poses){
+            int[] coor = Position.convertPositionToCoordinates(pos);
+            if (getCurrentState()[coor[0]][coor[1]] != Node.BLUE){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -239,14 +256,6 @@ public class PuzzleState implements State<Move> {
         return Arrays.deepHashCode(currentState);
     }
 
-    public static void main(String[] args) {
-        System.out.println("print debugging");
-
-        System.out.println("solution");
-        new BreadthFirstSearch<Move>().solveAndPrintSolution(new PuzzleState());
-
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -260,5 +269,9 @@ public class PuzzleState implements State<Move> {
         }
         sb.append("-----------------------------------");
         return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        new BreadthFirstSearch<Move>().solveAndPrintSolution(new PuzzleState());
     }
 }

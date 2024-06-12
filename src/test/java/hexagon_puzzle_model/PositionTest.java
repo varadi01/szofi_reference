@@ -1,4 +1,4 @@
-package hexagon_puzzle;
+package hexagon_puzzle_model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
