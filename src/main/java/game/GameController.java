@@ -1,10 +1,13 @@
 package game;
 
+import com.sun.javafx.collections.ImmutableObservableList;
 import hexagon_puzzle_model.Move;
 import hexagon_puzzle_model.Position;
 import hexagon_puzzle_model.PuzzleState;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -69,6 +72,8 @@ public class GameController {
         updatePlayField();
         stepCounter.setText("0");
         selectedTile=null;
+        resultScreen.setVisible(false);
+        GameResultManager.resetResults();
         //more?
     }
 
@@ -110,12 +115,33 @@ public class GameController {
 
     @FXML
     private AnchorPane resultScreen;
+    @FXML
+    private ListView<String> listView;
+    @FXML
+    private Label yourScore;
 
     private void onComplete(){
         //set fxid for window
         //set visble
+        resultScreen.setVisible(true);
+        resultScreen.toFront();
+
         //dunno about presentation
         //do record storing
+        GameResult currentResult = new GameResult(username, Integer.parseInt(stepCounter.getText()));
+        yourScore.setText(currentResult.toString());
+
+        List<GameResult> highscores = GameResultManager.getBestResults(); //duplicates
+        GameResultManager.addResult(currentResult); //wanna switch this cus it makes sense, bestresult is null somehow
+
+        //get into list
+        listView.getItems().removeAll(listView.getItems()); //not pretty but it retains items after beginning new game
+        //I know you could make this much nicer using a cell factory, but I am not a ui/ux person
+        for (GameResult result : highscores){
+            listView.getItems().add(result.toString());
+            System.out.println(result);
+        }
+
     }
 
     private int dir;
@@ -284,6 +310,8 @@ public class GameController {
             }
         }*/
 
+        //KISZERVEZNI
+
         int diff = 2;
 
         int rowCount = 5; // how many rows of tiles should be created
@@ -346,7 +374,6 @@ public class GameController {
         state = new PuzzleState();
         updatePlayField();
 
-        stepCounter.setText("0");
 
         /*
 

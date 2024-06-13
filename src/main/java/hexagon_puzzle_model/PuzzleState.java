@@ -106,7 +106,10 @@ public class PuzzleState implements State<Move> {
 
     @Override
     public boolean isSolved() {
-        //return Arrays.deepEquals(getCurrentState(), goalState); //hmm
+        if (Arrays.deepEquals(getCurrentState(), goalState)){
+            //puzzle solved strictly
+            return true;
+        }
 
         ArrayList<Position> poses = new ArrayList<>();
         poses.add(new Position(2,2));
