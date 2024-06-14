@@ -72,10 +72,18 @@ public class GameController {
         state = new PuzzleState(); //hm???
         updatePlayField();
         stepCounter.setText("0");
+        if (!(selectedTile==null)){
+            selectedTile.setScaleX(1);
+            selectedTile.setScaleY(1);
+            selectedTile.setStroke(Color.LIGHTGREY);
+        }
         selectedTile=null;
         resultScreen.setVisible(false);
         GameResultManager.resetResults();
         Logger.info("Game board was reset");
+
+        //kiszervezni
+
         //more?
     }
 
@@ -209,6 +217,11 @@ public class GameController {
         System.out.println(code.getChar());
         if (code.getCode() == KeyCode.ESCAPE.getCode()){
             dir=0;
+            if (!(selectedTile==null)){
+                selectedTile.setScaleX(1);
+                selectedTile.setScaleY(1);
+                selectedTile.setStroke(Color.LIGHTGREY);
+            }
             selectedTile=null;
         }
         //get and set the direction from a key event, provided we have a selected tile
@@ -264,9 +277,16 @@ public class GameController {
     }
 
     //start screen
+
+
     public void onTileClicked(Tile clickedTile){
 
         //cant do i init, palce somewhere
+        if (!(selectedTile==null)){
+            selectedTile.setScaleX(1);
+            selectedTile.setScaleY(1);
+            selectedTile.setStroke(Color.LIGHTGREY);
+        }
 
 
 
@@ -279,17 +299,16 @@ public class GameController {
         }
 
         selectedTile = clickedTile;
+        selectedTile.setScaleX(1.05);
+        selectedTile.setScaleY(1.05);
+        selectedTile.setStroke(Color.SLATEGRAY);
+        selectedTile.toFront();
+
         //      System.out.println(clickedTile.getId());
         //translate this to a position
         System.out.println(clickedTile.getId());
         translateTileSelection(index);
 
-
-
-        //TODO might do
-        //open the lil menu
-
-        //board.getChildren().add(new LocalMenu(clickedTile));
     }
 
     void postInitialize(){

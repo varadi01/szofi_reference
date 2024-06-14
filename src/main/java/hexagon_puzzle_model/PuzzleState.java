@@ -18,19 +18,19 @@ public class PuzzleState implements State<Move> {
      */
     public enum Node {
         /**
-         * do i need to wirte these aswell?
+         * is the value representing  a blue hexagon.
          */
         BLUE,
         /**
-         * do i need to wirte these aswell?
+         * is the value representing  a red hexagon.
          */
         RED,
         /**
-         * do i need to wirte these aswell?
+         * is the value representing a green hexagon.
          */
         GREEN,
         /**
-         * do i need to wirte these aswell?
+         * is the value of an element in the state where we are not concerned with the value.
          */
         EMPTY
     }
