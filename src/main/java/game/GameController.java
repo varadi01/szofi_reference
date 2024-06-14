@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,7 @@ public class GameController {
         selectedTile=null;
         resultScreen.setVisible(false);
         GameResultManager.resetResults();
+        Logger.info("Game board was reset");
         //more?
     }
 
@@ -91,12 +93,14 @@ public class GameController {
         //needs to be called after init
         loginPanel.setVisible(true);
         loginPanel.toFront();
+        Logger.info("showed alias query panel");
         board.getScene().addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode()== KeyCode.ENTER){
                 if (!alias.getText().isBlank()){
                     username = alias.getText();
                 }
                 else {
+                    Logger.info("user did not specify an alias. was named anonymous");
                     username="anonymous";
                 }
 
@@ -126,6 +130,8 @@ public class GameController {
         resultScreen.setVisible(true);
         resultScreen.toFront();
 
+        Logger.info("Puzzle solved, showed reults panel");
+
         //dunno about presentation
         //do record storing
         GameResult currentResult = new GameResult(username, Integer.parseInt(stepCounter.getText()));
@@ -134,6 +140,9 @@ public class GameController {
         List<GameResult> highscores = GameResultManager.getBestResults(); //duplicates
         GameResultManager.addResult(currentResult); //wanna switch this cus it makes sense, bestresult is null somehow
 
+        if (highscores.isEmpty()){
+            Logger.info("no previous results were stored");
+        }
         //get into list
         listView.getItems().removeAll(listView.getItems()); //not pretty but it retains items after beginning new game
         //I know you could make this much nicer using a cell factory, but I am not a ui/ux person
@@ -273,7 +282,7 @@ public class GameController {
         //      System.out.println(clickedTile.getId());
         //translate this to a position
         System.out.println(clickedTile.getId());
-        translateTileSelection(Integer.parseInt(clickedTile.getId()));
+        translateTileSelection(index);
 
 
 
@@ -356,6 +365,7 @@ public class GameController {
             }
             diff-=1;
         }
+        Logger.info("initialized playfield");
 
         /*
 

@@ -2,6 +2,7 @@ package game;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.tinylog.Logger;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -18,9 +19,6 @@ public class GameResultManager {
 
     //WORKS ALL DONE, REFACTOR, TIDY UP
 
-    //!!!!!!!!!!!!
-    //DO we lose results on restart? //do we not read results on startup?
-    //!!!!!!!!!!!!
 
     private static final Gson gson = new Gson();
 
@@ -35,6 +33,7 @@ public class GameResultManager {
 
     public static List<GameResult> getBestResults(){
         if (!created){
+            Logger.info("bestResults was not initialized yet");
             return new ArrayList<>();
         }
         readJson();
@@ -53,6 +52,9 @@ public class GameResultManager {
             readJson(); // we need to read results on startup bc we would overwrite them
         }
         bestResults.add(result); //itt best null
+
+        Logger.info("added new result: {}", result);
+
         bestResults.sort(Comparator.comparingInt(GameResult::getSteps));
         //refactor?
         List<GameResult> topFew = new ArrayList<>();
@@ -74,7 +76,7 @@ public class GameResultManager {
             fileWriter.write(s);
             fileWriter.flush();
         } catch (IOException e) {
-
+            Logger.error("An error occured when attempting to write to highscores.json");
             throw new RuntimeException(e);
         }
 
@@ -92,6 +94,7 @@ public class GameResultManager {
             bestResults = stuff;
         } catch (IOException e) {
             //gets called before creating the file on first run, dont throw just smth
+            Logger.info("highscores.json does not exist, bestResults initialized empty");
             bestResults = new ArrayList<>();
         }
     };

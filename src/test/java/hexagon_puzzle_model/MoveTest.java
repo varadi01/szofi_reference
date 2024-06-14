@@ -19,9 +19,8 @@ class MoveTest {
 
     @Test
     void Move() {
-        //rn it doesent throw anything due to me being a booboo
-        //assertThrows(IllegalArgumentException ,new Move(new Position(1,1), 1));
-
+        assertInstanceOf(Move.class, move);
+        assertInstanceOf(Move.class, otherMove);
     }
 
     @Test

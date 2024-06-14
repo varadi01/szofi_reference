@@ -2,28 +2,31 @@ package hexagon_puzzle_model;
 
 import java.util.Objects;
 
+/**
+ * Class which represents a hexagon's on the board as a set of x and y coordinates, corresponding to row number and collumn number respectively.
+ */
 public class Position {
     private int x;
     private int y;
 
-    public Position(int x, int y) throws IllegalArgumentException {
-        //cant access legal moves bc its empty at this point, generated at runtime booboo
-        /*
-        boolean contained = false;
-        for (Move move : PuzzleState.legalMoves){
-            Position position = move.getCenter();
-            if (position.getX() == x && position.getY() == y) { contained = true; break; }
-        }
-        if (!contained) { throw new IllegalArgumentException("Illegal move");}
-
-         */
-
+    /**
+     * Creates a <code>Position</code> object given a row and collumn number.
+     *
+     * @param x represents the row number
+     * @param y represents the collumn number
+     */
+    public Position(int x, int y) {
+        //we need not check if the created position is valid, because we do so in PuzzleState when we attempt to make the move
         this.x = x;
         this.y = y;
     }
 
-    //viccy mukodes
-    //GETEKKEL
+    /**
+     * Converts a <code>Position</code> object into an array of actual coordinates to use with <code>PuzzleState</code>'s <code>currentState</code>.
+     *
+     * @param position <code>Position</code> to be converted
+     * @return an <code>int</code> array of size 2, consisting of two coordinates
+     */
     public static int[] convertPositionToCoordinates(Position position) {
         //TODO
         //WHAT
@@ -41,16 +44,27 @@ public class Position {
         return new int[] {position.getX() - 1, startI + (position.getY() - 1) * 2}; //htis legal?
     }
 
-    //Ugyan ez visszafele?
 
+    /**
+     * {@return the Position object's x coordinate (row number)}
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * {@return the Position object's y coordinate (collumn number)}
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Determines the equality of <code>this</code> and <code>o</code>.
+     *
+     * {@return true if the objects are equal, false otherwise}
+     * @param o the object to be compared to <code>this</code>
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +72,9 @@ public class Position {
         return x == position.x && y == position.y;
     }
 
+    /**
+     * {@return the hash code of the position}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(x, y);

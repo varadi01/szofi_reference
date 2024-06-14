@@ -1,23 +1,49 @@
 package hexagon_puzzle_model;
 
+import org.tinylog.Logger;
 import puzzle.State;
 import puzzle.solver.BreadthFirstSearch;
 
 import java.util.*;
 
-
+/**
+ * Class representing the state of the puzzle and providing means of manipulating said state.
+ * Although the puzzle consists of hexagons tiled next to each other with varying numbers of tiles in a line,
+ * we use a 5 x 9 array to represent a given state of the puzzle for mathematical simplicity reasons.
+ */
 public class PuzzleState implements State<Move> {
 
+    /**
+     * Enum representing the state of nodes, which make up the puzzle's state.
+     */
     public enum Node {
+        /**
+         * do i need to wirte these aswell?
+         */
         BLUE,
+        /**
+         * do i need to wirte these aswell?
+         */
         RED,
+        /**
+         * do i need to wirte these aswell?
+         */
         GREEN,
+        /**
+         * do i need to wirte these aswell?
+         */
         EMPTY
     }
 
     private Node[][] currentState;
 
+    /**
+     * Array representing the starting state of the puzzle.
+     */
     public static final Node[][] startState = new Node[5][9];
+    /**
+     * Array representing the goal state of the puzzle.
+     */
     public static final Node[][] goalState = new Node[5][9];
 
     //initialize arrays
@@ -91,23 +117,38 @@ public class PuzzleState implements State<Move> {
         }
     }
 
+    /**
+     * Creates a <code>PuzzleState</code> object, creating a new instance of the puzzle.
+     */
     public PuzzleState() {
         setCurrentState(startState);
-
+        Logger.info("Started new game");
     }
 
+    /**
+     * {@return the current state of the puzzle}
+     */
     public Node[][] getCurrentState() {
         return currentState;
     }
 
+    /**
+     * Sets the current state of the puzzle to <code>state</code>.
+     *
+     * @param state the desired state
+     */
     public void setCurrentState(Node[][] state) {
         this.currentState = makeDeepCopy(state);
     }
 
+    /**
+     * {@return true if the puzzle is solved, false otherwise}
+     */
     @Override
     public boolean isSolved() {
         if (Arrays.deepEquals(getCurrentState(), goalState)){
             //puzzle solved strictly
+            Logger.info("Found strict solution");
             return true;
         }
 
@@ -126,16 +167,24 @@ public class PuzzleState implements State<Move> {
                 return false;
             }
         }
+        Logger.info("Found solution");
         return true;
     }
 
+    /**
+     * Determines if the passed <code>Move</code> object is a move that can be made on the puzzle's current state.
+     *
+     * @param o the move to be checked
+     * @return true if the move is legal to be made, false otherwise
+     */
     @Override
     public boolean isLegalMove(Move o) {
-        if (o == null) { return false; }//should throw smth
+        if (o == null) { return false; }
         return legalMoves.contains(o); //hashset?
     }
 
-    public static List<int[]> getNeighboursCoordinates(Position position){
+    //made this private
+    private static List<int[]> getNeighboursCoordinates(Position position){
         int[] centerNodeCoordinates = Position.convertPositionToCoordinates(position);
 
         List<int[]> neighbouringNodesCoordinates = new ArrayList<>(); //dunno //may be linked list eg
@@ -150,7 +199,7 @@ public class PuzzleState implements State<Move> {
         return neighbouringNodesCoordinates;
     }
 
-    public List<Node> getNeighbours(Position position) {
+    private List<Node> getNeighbours(Position position) {
         //we store neighbours in clockwise order
         List<Node> neighbours = new ArrayList<>(); //dunno
 
@@ -165,8 +214,7 @@ public class PuzzleState implements State<Move> {
         return neighbours;
     }
 
-
-    public void setNeighbours(Position position, List<Node> neighbours) {
+    private void setNeighbours(Position position, List<Node> neighbours) {
         List<int[]> neighbouringNodesCoordinates = getNeighboursCoordinates(position);
         Node[][] newState = makeDeepCopy(this.getCurrentState());
 
@@ -179,13 +227,13 @@ public class PuzzleState implements State<Move> {
         this.setCurrentState(newState);
     }
 
-    private Node[][] makeDeepCopy(Node[][] state) {
+    private static Node[][] makeDeepCopy(Node[][] state) {
         return Arrays.stream(state)
                 .map( s -> Arrays.copyOf(s, s.length))
                 .toArray(Node[][]::new);
     }
 
-    public static List<Node> permutateNodes(List<Node> nodes, int direction) {
+    private static List<Node> permutateNodes(List<Node> nodes, int direction) {
         List<Node> permutation = new ArrayList<>();
         //placegolder pls refactor
         for (int i = 0; i < 6; i++) {
@@ -211,10 +259,23 @@ public class PuzzleState implements State<Move> {
         return permutation;
     }
 
+    /**
+     * Attempts to make a <code>Move</code> on the state of the puzzle.
+     * If the move is legal, it is made.
+     *
+     * @param move the <code>Move</code> to be made
+     */
     @Override
     public void makeMove(Move move) {
-        if (move == null) { return ; }//should throw smth
-        //if (!isLegalMove(move)) { return; }
+        if (move == null) {
+            Logger.error("An illegal move was trying to be made: the move was null");
+            throw new IllegalArgumentException("Move is null");
+        }
+        if (!isLegalMove(move)) {
+            Logger.error("An illegal move was trying to be made: {}",move);
+            throw new IllegalArgumentException("Illegal move");
+            //logger
+        } // throws
 
         //get neighbours
         List<Node> neighbours = getNeighbours(move.getCenter());
@@ -226,6 +287,9 @@ public class PuzzleState implements State<Move> {
         //that's it, check for exceptions
     }
 
+    /**
+     * {@return a set of {@code Move} objects that are legal to be made}
+     */
     @Override
     public Set<Move> getLegalMoves() {
         Set<Move> moves = new HashSet<>();
@@ -235,6 +299,9 @@ public class PuzzleState implements State<Move> {
         return moves;
     }
 
+    /**
+     * {@return a copy of the {@code PuzzleState} object}
+     */
     @Override
     public PuzzleState clone() {
         PuzzleState clonedState;
@@ -247,6 +314,12 @@ public class PuzzleState implements State<Move> {
         return clonedState;
     }
 
+    /**
+     * Determines the equality of <code>this</code> and <code>o</code>.
+     *
+     * {@return true if the objects are equal, false otherwise}
+     * @param o the object to be compared to <code>this</code>
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -254,11 +327,20 @@ public class PuzzleState implements State<Move> {
         return Arrays.deepEquals(this.currentState, other.currentState);
     }
 
+    /**
+     * {@return the hash code of the {@code PuzzleState}}
+     */
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(currentState);
     }
 
+    /**
+     * Returns a string representation of the <code>PuzzleState</code>.
+     * Used for presentation and readability reasons.
+     *
+     * @return a string representation of the <code>PuzzleState</code>
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -31,8 +31,8 @@ class PositionTest {
 
     @Test
     void testEquals() {
-        assertEquals(samePosition,new Position(2,2));
         assertEquals(samePosition,position);
+        assertEquals(samePosition,new Position(2,2));
         assertNotEquals(samePosition,otherPosition);
     }
 
