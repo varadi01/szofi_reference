@@ -2,6 +2,7 @@ package game;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -13,52 +14,40 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GameResultManager {
-    //gameresult object
-    //serialize to json somehow, read when we want
-    //have to order them
-
-    //WORKS ALL DONE, REFACTOR, TIDY UP
-
 
     private static final Gson gson = new Gson();
 
-    public static void resetResults(){
-        bestResults = new ArrayList<>();
-        //dont work
-    }
-
-    //might need to kiszervezni ordering and order after reading also
     private static List<GameResult> bestResults;
-    private static boolean created = false;
+    private static boolean created = false; //as far as I'm concerned there isn't a way to initialize bestResults in this case, so we need this bool
 
     public static List<GameResult> getBestResults(){
         if (!created){
             Logger.info("bestResults was not initialized yet");
-            return new ArrayList<>();
         }
         readJson();
         return bestResults;
-    };
+    }
 
+    public static void resetResults(){
+        bestResults = new ArrayList<>();
+    }
 
     public static void addResult(GameResult result){
         if (!created){
             bestResults = new ArrayList<>();
             created = true;
             if (!Files.exists(Path.of("highscores.json"))){
-                System.out.println("file not exist");
                 writeJson(); //create the file on the very first startup so we dont try to read a non-existing one
             }
-            readJson(); // we need to read results on startup bc we would overwrite them
+            readJson();
         }
-        bestResults.add(result); //itt best null
+        bestResults.add(result);
 
         Logger.info("added new result: {}", result);
 
-        bestResults.sort(Comparator.comparingInt(GameResult::getSteps));
-        //refactor?
-        List<GameResult> topFew = new ArrayList<>();
+        sortBestResults();
 
+        List<GameResult> topFew = new ArrayList<>();
         int i=0;
         while (i<10 && i <bestResults.size()){
             topFew.add(bestResults.get(i));
@@ -67,9 +56,14 @@ public class GameResultManager {
 
         bestResults = topFew;
         writeJson();
-    };
+    }
 
-    //write
+    private static void sortBestResults() {
+        if (bestResults != null){
+            bestResults.sort(Comparator.comparingInt(GameResult::getSteps));
+        }
+    }
+
     private static void writeJson(){
         String s = gson.toJson(bestResults);
         try (FileWriter fileWriter = new FileWriter("highscores.json", false)) {
@@ -79,25 +73,27 @@ public class GameResultManager {
             Logger.error("An error occured when attempting to write to highscores.json");
             throw new RuntimeException(e);
         }
+    }
 
-    };
-
-    //read
     private static void readJson(){
-        //read file, deserialize, set bestRes
-        //IDK ABOUT THIS
-        List<GameResult> stuff;
+        List<GameResult> results;
         try {
             String s = Files.readString(Path.of("highscores.json"));
+            if (s.isEmpty()){
+                bestResults = new ArrayList<>();
+                return;
+            }
+
             Type listType = new TypeToken<ArrayList<GameResult>>(){}.getType();
-            stuff = gson.fromJson(s, listType);
-            bestResults = stuff;
+            results = gson.fromJson(s, listType);
+            bestResults = results;
+            sortBestResults();
         } catch (IOException e) {
-            //gets called before creating the file on first run, dont throw just smth
+            //gets called before creating the file on first run
             Logger.info("highscores.json does not exist, bestResults initialized empty");
             bestResults = new ArrayList<>();
         }
-    };
+    }
 
 
 }

@@ -1,6 +1,7 @@
 package hexagon_puzzle_model;
 
 import org.tinylog.Logger;
+
 import puzzle.State;
 import puzzle.solver.BreadthFirstSearch;
 
@@ -55,7 +56,6 @@ public class PuzzleState implements State<Move> {
             }
         }
 
-        //set start state // do smarter pls
         startState[0][2] = Node.RED;
         startState[0][4] = Node.RED;
         startState[0][6] = Node.RED;
@@ -76,7 +76,6 @@ public class PuzzleState implements State<Move> {
         startState[4][4] = Node.GREEN;
         startState[4][6] = Node.GREEN;
 
-        //set goal state
         goalState[0][2] = Node.GREEN;
         goalState[0][4] = Node.RED;
         goalState[0][6] = Node.GREEN;
@@ -100,9 +99,8 @@ public class PuzzleState implements State<Move> {
 
     private static final Set<Move> legalMoves = new HashSet<>();
 
+    //generate legal moves
     static {
-        //refactor pls
-
         for (int i = 2; i <=3; i++) {
             legalMoves.add(new Move(new Position(2,i), 1));
             legalMoves.add(new Move(new Position(2,i), -1));
@@ -115,6 +113,18 @@ public class PuzzleState implements State<Move> {
             legalMoves.add(new Move(new Position(4,i), 1));
             legalMoves.add(new Move(new Position(4,i), -1));
         }
+    }
+
+    /**
+     * {@return a set of {@code Move} objects that are legal to be made}
+     */
+    @Override
+    public Set<Move> getLegalMoves() {
+        Set<Move> moves = new HashSet<>();
+        for (Move move : legalMoves){
+            moves.add(move);
+        }
+        return moves;
     }
 
     /**
@@ -147,23 +157,16 @@ public class PuzzleState implements State<Move> {
     @Override
     public boolean isSolved() {
         if (Arrays.deepEquals(getCurrentState(), goalState)){
-            //puzzle solved strictly
             Logger.info("Found strict solution");
             return true;
         }
 
-        ArrayList<Position> poses = new ArrayList<>();
-        poses.add(new Position(2,2));
-        poses.add(new Position(2,3));
-        poses.add(new Position(3,2));
-        poses.add(new Position(3,3));
-        poses.add(new Position(3,4));
-        poses.add(new Position(4,2));
-        poses.add(new Position(4,3));
+        Set<Position> internalNodePositions = new HashSet<>();
+        legalMoves.stream().map(Move::getCenter).forEach(internalNodePositions::add);
 
-        for (Position pos : poses){
-            int[] coor = Position.convertPositionToCoordinates(pos);
-            if (getCurrentState()[coor[0]][coor[1]] != Node.BLUE){
+        for (Position position : internalNodePositions){
+            int[] coordinates = Position.convertPositionToCoordinates(position);
+            if (getCurrentState()[coordinates[0]][coordinates[1]] != Node.BLUE){
                 return false;
             }
         }
@@ -180,14 +183,13 @@ public class PuzzleState implements State<Move> {
     @Override
     public boolean isLegalMove(Move o) {
         if (o == null) { return false; }
-        return legalMoves.contains(o); //hashset?
+        return legalMoves.contains(o);
     }
 
-    //made this private
     private static List<int[]> getNeighboursCoordinates(Position position){
         int[] centerNodeCoordinates = Position.convertPositionToCoordinates(position);
 
-        List<int[]> neighbouringNodesCoordinates = new ArrayList<>(); //dunno //may be linked list eg
+        List<int[]> neighbouringNodesCoordinates = new ArrayList<>();
 
         neighbouringNodesCoordinates.add(new int[] {centerNodeCoordinates[0]-1,centerNodeCoordinates[1]+1}); //top right neighbour
         neighbouringNodesCoordinates.add(new int[] {centerNodeCoordinates[0],centerNodeCoordinates[1]+2}); //right neighbour
@@ -201,7 +203,7 @@ public class PuzzleState implements State<Move> {
 
     private List<Node> getNeighbours(Position position) {
         //we store neighbours in clockwise order
-        List<Node> neighbours = new ArrayList<>(); //dunno
+        List<Node> neighbours = new ArrayList<>();
 
         List<int[]> neighbouringNodesCoordinates = getNeighboursCoordinates(position);
 
@@ -227,19 +229,12 @@ public class PuzzleState implements State<Move> {
         this.setCurrentState(newState);
     }
 
-    private static Node[][] makeDeepCopy(Node[][] state) {
-        return Arrays.stream(state)
-                .map( s -> Arrays.copyOf(s, s.length))
-                .toArray(Node[][]::new);
-    }
-
     private static List<Node> permutateNodes(List<Node> nodes, int direction) {
         List<Node> permutation = new ArrayList<>();
-        //placegolder pls refactor
+
         for (int i = 0; i < 6; i++) {
             permutation.add(Node.EMPTY);
         }
-        //A NODESOT IS KEVERI????
 
         for (int i = 0; i <= nodes.size()-1; i++) {
             //direction: 1 -> clockwise; -1 -> counter-clockwise
@@ -274,29 +269,13 @@ public class PuzzleState implements State<Move> {
         if (!isLegalMove(move)) {
             Logger.error("An illegal move was trying to be made: {}",move);
             throw new IllegalArgumentException("Illegal move");
-            //logger
-        } // throws
-
-        //get neighbours
-        List<Node> neighbours = getNeighbours(move.getCenter());
-        //permutate list of neighbours
-        List<Node> rotatedNeighbours = permutateNodes(neighbours, move.getDirection());
-        //change neighbours
-        setNeighbours(move.getCenter(), rotatedNeighbours);
-
-        //that's it, check for exceptions
-    }
-
-    /**
-     * {@return a set of {@code Move} objects that are legal to be made}
-     */
-    @Override
-    public Set<Move> getLegalMoves() {
-        Set<Move> moves = new HashSet<>();
-        for (Move move : legalMoves){
-            moves.add(move);
         }
-        return moves;
+
+        List<Node> neighbours = getNeighbours(move.getCenter());
+
+        List<Node> rotatedNeighbours = permutateNodes(neighbours, move.getDirection());
+
+        setNeighbours(move.getCenter(), rotatedNeighbours);
     }
 
     /**
@@ -312,6 +291,12 @@ public class PuzzleState implements State<Move> {
         }
         clonedState.currentState = makeDeepCopy(this.currentState);
         return clonedState;
+    }
+
+    private static Node[][] makeDeepCopy(Node[][] state) {
+        return Arrays.stream(state)
+                .map( s -> Arrays.copyOf(s, s.length))
+                .toArray(Node[][]::new);
     }
 
     /**

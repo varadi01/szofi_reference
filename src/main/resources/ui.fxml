@@ -28,7 +28,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="loginPanel" layoutX="300.0" layoutY="169.0" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: FLORALWHITE; -fx-border-color: SLATEGREY; -fx-border-radius: 5; -fx-border-width: 4;" visible="false">
+      <AnchorPane fx:id="aliasQueryPanel" layoutX="300.0" layoutY="169.0" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: FLORALWHITE; -fx-border-color: SLATEGREY; -fx-border-radius: 5; -fx-border-width: 4;" visible="false">
          <children>
             <Label layoutX="85.0" layoutY="88.0" text="Please enter your alias">
                <font>
@@ -55,7 +55,7 @@
                   <Font name="FreeSans" size="25.0" />
                </font>
             </Label>
-            <ListView fx:id="listView" layoutX="161.0" layoutY="158.0" opacity="0.8" prefHeight="335.0" prefWidth="600.0" style="-fx-background-color: ATIQUEWHITE;" />
+            <ListView fx:id="highscoreList" layoutX="161.0" layoutY="158.0" opacity="0.8" prefHeight="335.0" prefWidth="600.0" />
             <Button layoutX="370.0" layoutY="502.0" mnemonicParsing="false" onMouseClicked="#resetBoard" style="-fx-background-color: LIGHTSLATEGREY;" text="Restart" textAlignment="CENTER">
                <font>
                   <Font name="FreeSans Bold" size="37.0" />

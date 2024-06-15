@@ -28,20 +28,16 @@ public class Position {
      * @return an <code>int</code> array of size 2, consisting of two coordinates
      */
     public static int[] convertPositionToCoordinates(Position position) {
-        //TODO
-        //WHAT
-        if (position.getX()>=4){
+        if (position.getX() >= 4){
             if (position.getX() == 5){
-                //x =5
-                return new int[] {position.getX() - 1, 2 + (position.getY()-1) * 2}; //htis legal?
+                return new int[] {position.getX() - 1, 2 + (position.getY() - 1) * 2};
             }
-            //x = 4
-            return new int[] {position.getX() - 1, 1 + (position.getY() - 1) * 2 }; //htis legal?
+            return new int[] {position.getX() - 1, 1 + (position.getY() - 1) * 2};
         }
 
-        int startI=3-position.getX();
+        int startI = 3 - position.getX();
 
-        return new int[] {position.getX() - 1, startI + (position.getY() - 1) * 2}; //htis legal?
+        return new int[] {position.getX() - 1, startI + (position.getY() - 1) * 2};
     }
 
 
@@ -69,7 +65,7 @@ public class Position {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Position position)) return false;
-        return x == position.x && y == position.y;
+        return x == position.getX() && y == position.getY();
     }
 
     /**

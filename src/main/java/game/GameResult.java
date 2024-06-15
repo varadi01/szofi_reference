@@ -1,8 +1,8 @@
 package game;
 
 public class GameResult {
-    private String playerName;
-    private int steps;
+    private final String playerName;
+    private final int steps;
 
     public GameResult(String playerName, int steps) {
         this.playerName = playerName;
@@ -15,6 +15,6 @@ public class GameResult {
 
     @Override
     public String toString() {
-        return playerName + "   -   " + steps;
+        return playerName + "       -        " + steps;
     }
 }

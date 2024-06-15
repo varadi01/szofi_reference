@@ -5,10 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import org.tinylog.Logger;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class GameApplication extends Application {
 
@@ -17,8 +17,8 @@ public class GameApplication extends Application {
         Parent root;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui.fxml"));
         GameController controller;
+
         try {
-            //root = fxmlLoader.load(Objects.requireNonNull(getClass().getResource("/ui.fxml")));
             root = fxmlLoader.load();
         } catch (IOException e) {
             Logger.error("FXML not found");
@@ -33,11 +33,11 @@ public class GameApplication extends Application {
 
         primaryStage.setTitle("Hexagon puzzle");
         Scene scene = new Scene(root);
-        //might not be mvc, could prob do from other script
 
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+
         controller.postInitialize();
     }
 }

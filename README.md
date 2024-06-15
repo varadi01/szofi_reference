@@ -5,15 +5,17 @@ A puzzle centered around the arrangement of hexagonal elements.
 
 ## General description
 
-This is a maven project which forms a simple puzzle game using jvafx.
+This is a maven project which forms a simple puzzle game using javafx.
 The puzzle consists of 19 hexagonal tiles, 6 of them are red coloured, 6 green and 7 blue. These tiles are
 arraged so that they form a bigger hexagon. 
 Below is an image showing how, by default, the hexagons and their colours are arranged.
+
 ![](assets/starts.png)
 
 The goal of the puzzle is to arrange these elements in such a way, that all blue hexagons have six neighbours (example shown below).
 The player can change the state of the puzzle by choosing a tile that has six neighbours (tiles fully contained by other tiles),
 and choosing a direction, either clockwise or counter-clockwise, to rotate the neighbours around the selected tile in.
+
 ![](assets/goals.png)
 
 ## Gameplay
@@ -29,6 +31,25 @@ the player may press either D or RIGHT-ARROW for clockwise rotation,
 or A or LEFT-ARROW for counter-clockwise rotation.
 
 Upon completing the puzzle the game displays the top ten previous records set, based on the number of moves it took to solve the puzzle.
+
+### One potential solution to the puzzle
+
+The following steps (N1 N2 N3) are to be read as: (N1 - hexagon's row number, N2 - hexagon's collumn number,
+N3 - direction of rotation 1 - clockwise,-1 - counter-clockwise)
+
+SOLUTION:<br>
+ 3 3 -1 <br>
+ 4 2 1 <br>
+ 3 3 1<br>
+ 3 4 -1<br>
+ 3 4 -1<br>
+ 3 1 1<br>
+ 3 1 1<br>
+ 3 3 1<br>
+ 3 3 1<br>
+ 3 3 1<br>
+ 3 1 -1<br>
+ 3 1 -1<br>
 
 ## Requirements
 

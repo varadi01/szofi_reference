@@ -1,8 +1,6 @@
 package hexagon_puzzle_model;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Class which represents a move which can be performed on a given state of the puzzle.
@@ -17,13 +15,13 @@ public class Move {
     /**
      * <code>Position</code> object which is the position of the move's selected hexagon.
      */
-    public Position center; //selected node
+    public Position center;
 
     /**
      * The direction of rotation. Indicated by either 1 or -1.
      * 1 corresponds to clockwise rotation, -1 corresponds to counter-clockwise rotation.
      */
-    public int direction; //1-right(clockwise) ;  -1 left (counter-clockwise)
+    public int direction;
 
     /**
      * Creates a new <code>Move</code> object given the position of the selected hexagon to move from, and a direction to rotate neighbours in.
