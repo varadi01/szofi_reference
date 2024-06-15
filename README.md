@@ -6,13 +6,13 @@ A puzzle centered around the arrangement of hexagonal elements.
 ## General description
 
 This is a maven project which forms a simple puzzle game using javafx.
-The puzzle consists of 19 hexagonal tiles, 6 of them are red coloured, 6 green and 7 blue. These tiles are
-arraged so that they form a bigger hexagon. 
+The puzzle consists of 19 hexagonal tiles, 6 of them are red coloured, 6 green and 7 blue.<br>
+These tiles are arraged so that they form a bigger hexagon. <br>
 Below is an image showing how, by default, the hexagons and their colours are arranged.
 
 ![](assets/starts.png)
 
-The goal of the puzzle is to arrange these elements in such a way, that all blue hexagons have six neighbours (example shown below).
+The goal of the puzzle is to arrange these elements in such a way, that all blue hexagons have six neighbours (example shown below).<br>
 The player can change the state of the puzzle by choosing a tile that has six neighbours (tiles fully contained by other tiles),
 and choosing a direction, either clockwise or counter-clockwise, to rotate the neighbours around the selected tile in.
 
@@ -21,14 +21,15 @@ and choosing a direction, either clockwise or counter-clockwise, to rotate the n
 ## Gameplay
 
 On initial startup, the player is prompted to specify themselves an alias to go by. This is not necessary and the field 
-can be left blank, however the project uses these aliases to keep track of records the player sets.
+can be left blank, however the project uses these aliases to keep track of records the player sets.<br>
 
 After this the game begins. The player may choose any internal tile by clicking on it, and may dismiss the current selection,
-by either choosing a different tile, or pressing ESC.
+by either choosing a different tile, or pressing ESC.<br>
 
 Making a move can be done by choosing a tile, and a direction to rotate the tile's neighbours in;
-the player may press either D or RIGHT-ARROW for clockwise rotation,
-or A or LEFT-ARROW for counter-clockwise rotation.
+the player may press either:<br>
+D or RIGHT-ARROW for clockwise rotation,<br>
+or A or LEFT-ARROW for counter-clockwise rotation.<br>
 
 Upon completing the puzzle the game displays the top ten previous records set, based on the number of moves it took to solve the puzzle.
 

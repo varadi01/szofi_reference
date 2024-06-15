@@ -24,18 +24,18 @@ public class GameController {
     public class Tile extends Polygon {
 
         private final static double radius = 70; //the distance from hexagon center to corner
-        public final static double n = Math.sqrt(radius * radius * 0.75); //the distance from hexagon center to middle of the axis
-        public final static double TILE_HEIGHT = 2 * radius;
-        public final static double TILE_WIDTH = 2 * n;
+        public final static double d = Math.sqrt(radius * radius * 0.75); //the distance from hexagon center to middle of the axis
+        public final static double tileHeight = 2 * radius;
+        public final static double tileWidth = 2 * d;
 
         Tile(double x, double y, int id) {
             getPoints().addAll(
                     x, y,
                     x, y + radius,
-                    x + n, y + radius * 1.5,
-                    x + TILE_WIDTH, y + radius,
-                    x + TILE_WIDTH, y,
-                    x + n, y - radius * 0.5
+                    x + d, y + radius * 1.5,
+                    x + tileWidth, y + radius,
+                    x + tileWidth, y,
+                    x + d, y - radius * 0.5
             );
 
             setStrokeWidth(4);
@@ -51,7 +51,7 @@ public class GameController {
     private AnchorPane board;
     @FXML
     private Label stepCounter;
-    private List<Polygon> tiles = new ArrayList<>();
+    private List<Polygon> playfieldTiles = new ArrayList<>();
     public PuzzleState state;
     private Tile selectedTile;
 
@@ -94,9 +94,12 @@ public class GameController {
             int[] coor = Position.convertPositionToCoordinates(pos);
             PuzzleState.Node node = state.getCurrentState()[coor[0]][coor[1]];
 
-            if (node == PuzzleState.Node.BLUE) {tiles.get(c).setFill(Color.BLUE); }
-            if (node == PuzzleState.Node.GREEN) {tiles.get(c).setFill(Color.FORESTGREEN); }
-            if (node == PuzzleState.Node.RED) {tiles.get(c).setFill(Color.RED); }
+            if (node == PuzzleState.Node.BLUE) {
+                playfieldTiles.get(c).setFill(Color.BLUE); }
+            if (node == PuzzleState.Node.GREEN) {
+                playfieldTiles.get(c).setFill(Color.FORESTGREEN); }
+            if (node == PuzzleState.Node.RED) {
+                playfieldTiles.get(c).setFill(Color.RED); }
             c+=1;
         }
     }
@@ -152,9 +155,9 @@ public class GameController {
             Logger.info("no previous results were stored");
         }
 
-        highscoreList.getItems().removeAll(highscoreList.getItems()); //not pretty but it retains items after beginning new game
+        highscoreList.getItems().removeAll(highscoreList.getItems()); //the list retains items after beginning new game, we need to empty it
 
-        //I know you could make this much nicer using a cell factory, but I am not a ui/ux person
+        //display of highscore could be made much nicer using a cell factory
         for (GameResult result : highscores){
             highscoreList.getItems().add(result.toString());
             System.out.println(result);
@@ -267,11 +270,11 @@ public class GameController {
             }
 
             for (int j = 0; j < tilesPerRow-Math.abs(diff); j++) {
-                double x = j * Tile.TILE_WIDTH + (i % 2) * Tile.n + xOffset;
-                double y = i * Tile.TILE_HEIGHT * 0.75 + yStartOffset;
+                double x = j * Tile.tileWidth + (i % 2) * Tile.d + xOffset;
+                double y = i * Tile.tileHeight * 0.75 + yStartOffset;
 
                 Polygon tile = new Tile(x, y, c); //c is the id/fx:id of the tiles
-                tiles.add(tile);
+                playfieldTiles.add(tile);
 
                 board.getChildren().add(tile);
                 c+=1;
